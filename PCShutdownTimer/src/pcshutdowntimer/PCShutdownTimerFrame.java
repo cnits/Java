@@ -152,7 +152,7 @@ public class PCShutdownTimerFrame extends javax.swing.JFrame {
         try {
             String _hour = cbHour.getSelectedItem().toString();
             String _minute = cbMinute.getSelectedItem().toString();
-            Long _seconds = Long.parseLong(_hour) * 60 * 60 + Long.parseLong(_minute) * 60;
+            Long _seconds = Utility.getInterval(Integer.parseInt(_hour), Integer.parseInt(_minute));
             String _action = cbAction.getSelectedItem().toString();
             String commandLine = "";
             if (_action == "Log-Out") {
