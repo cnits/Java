@@ -22,6 +22,7 @@ public class PCShutdownTimerFrame extends javax.swing.JFrame {
      */
     public PCShutdownTimerFrame() {
         initComponents();
+        btnStart.setEnabled(false);
     }
 
     /**
@@ -82,7 +83,12 @@ public class PCShutdownTimerFrame extends javax.swing.JFrame {
         jLabel1.setText("Choose Action");
 
         cbAction.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
-        cbAction.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Log-Out", "Hibernate", "Restart", "Shutdown" }));
+        cbAction.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Choose a task", "Log-Out", "Hibernate", "Restart", "Shutdown" }));
+        cbAction.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbActionItemStateChanged(evt);
+            }
+        });
 
         btnCancel.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         btnCancel.setText("Cancel");
@@ -155,17 +161,23 @@ public class PCShutdownTimerFrame extends javax.swing.JFrame {
             Long _seconds = Utility.getInterval(Integer.parseInt(_hour), Integer.parseInt(_minute));
             String _action = cbAction.getSelectedItem().toString();
             String commandLine = "";
-            if (_action == "Log-Out") {
-                //commandLine = "shutdown -l -t ".concat(_seconds.toString());
-                commandLine = "shutdown -l";
-            } else if (_action == "Hibernate") {
-                commandLine = "shutdown -h -t ".concat(_seconds.toString());
-            } else if (_action == "Restart") {
-                commandLine = "shutdown -r -t ".concat(_seconds.toString());
-            } else if (_action == "Shutdown") {
-                commandLine = "shutdown -s -t ".concat(_seconds.toString());
-            } else {
-                commandLine = "shutdown -a";
+            if (null != _action) switch (_action) {
+                case "Log-Out":
+                    //commandLine = "shutdown -l -t ".concat(_seconds.toString());
+                    commandLine = "shutdown -l";
+                    break;
+                case "Hibernate":
+                    commandLine = "shutdown -h -t ".concat(_seconds.toString());
+                    break;
+                case "Restart":
+                    commandLine = "shutdown -r -t ".concat(_seconds.toString());
+                    break;
+                case "Shutdown":
+                    commandLine = "shutdown -s -t ".concat(_seconds.toString());
+                    break;
+                default:
+                    commandLine = "shutdown -a";
+                    break;
             }
             runTime.exec(commandLine);
         } catch (IOException ex) {
@@ -185,6 +197,23 @@ public class PCShutdownTimerFrame extends javax.swing.JFrame {
         runTime.exit(1);
         this.dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void cbActionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbActionItemStateChanged
+        // TODO add your handling code here:
+        String _action = cbAction.getSelectedItem().toString();
+        if("Choose a task".equals(_action)){
+            btnStart.setEnabled(false);
+        } else {
+            btnStart.setEnabled(true);
+        }
+        if("Log-Out".equals(_action)) {
+            cbHour.setEnabled(false);
+            cbMinute.setEnabled(false);
+        } else {
+            cbHour.setEnabled(true);
+            cbMinute.setEnabled(true);
+        }
+    }//GEN-LAST:event_cbActionItemStateChanged
 
     /**
      * @param args the command line arguments
